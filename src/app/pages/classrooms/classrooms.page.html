@@ -1,0 +1,12 @@
+<mat-spinner *ngIf="isFetching" />
+<ng-container *ngIf="!isFetching">
+  <ng-container *ngIf="classrooms.length">
+    <classroom *ngFor="let classroom of classrooms" [classroom]="classroom" />
+  </ng-container>
+
+  <ng-container *ngIf="!classrooms.length">
+    <h3>No classrooms</h3>
+  </ng-container>
+
+  <button mat-flat-button color="primary">Add Classroom</button>
+</ng-container>

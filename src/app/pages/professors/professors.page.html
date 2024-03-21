@@ -1,0 +1,12 @@
+<mat-spinner *ngIf="isFetching" />
+<ng-container *ngIf="!isFetching">
+  <ng-container *ngIf="professors.length">
+    <professor *ngFor="let professor of professors" [professor]="professor" />
+  </ng-container>
+
+  <ng-container *ngIf="!professors.length">
+    <h3>No Professors</h3>
+  </ng-container>
+
+  <button mat-flat-button color="primary">Add Professor</button>
+</ng-container>

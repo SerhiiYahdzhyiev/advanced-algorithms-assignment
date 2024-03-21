@@ -1,0 +1,12 @@
+body {
+  min-height: 100vh;
+}
+
+app-root {
+  display: block;
+  height: 100vh;
+}
+
+.mat-drawer-container {
+  height: 100%;
+}

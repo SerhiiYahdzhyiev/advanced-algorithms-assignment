@@ -1,0 +1,44 @@
+{
+  "professors": [
+    {
+      "id": "1",
+      "title": "Professor 1"
+    },
+    {
+      "id": "2",
+      "title": "Professor 2"
+    },
+    {
+      "id": "3",
+      "title": "Professor 3"
+    }
+  ],
+  "lectures": [
+    {
+      "id": "1",
+      "title": "Lecture 1"
+    },
+    {
+      "id": "2",
+      "title": "Lecture 2"
+    },
+    {
+      "id": "3",
+      "title": "Lecture 3"
+    }
+  ],
+  "classrooms": [
+    {
+      "id": "1",
+      "title": "Classroom 1"
+    },
+    {
+      "id": "2",
+      "title": "Classroom 2"
+    },
+    {
+      "id": "3",
+      "title": "Classroom 3"
+    }
+  ]
+}
