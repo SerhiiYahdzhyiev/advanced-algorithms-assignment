@@ -11,25 +11,28 @@
     </mat-card-header>
     <mat-card-content style="padding-block: 10px">
       <h3>Can Teach:</h3>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <button *ngFor="let lecture of canTeach" (click)="removeLecture(lecture)" mat-flat-button color="accent">
-          {{lecture.title}}<mat-icon *ngIf="isEditing">close</mat-icon></button>
-        <ng-container *ngIf="isEditing">
-          <button mat-mini-fab color="primary" [matMenuTriggerFor]="menu">
-            <mat-icon>plus_one</mat-icon>
-          </button>
-          <mat-menu #menu="matMenu">
-            <button *ngFor="let lecture of this.lectures" (click)="addLecture(lecture)"
-              mat-menu-item>{{lecture.title}}</button>
-          </mat-menu>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <ng-container *ngIf="professor.canTeach.length">
+          <button *ngFor="let lecture of canTeach" (click)="removeLecture(lecture)" mat-flat-button color="accent">
+            {{lecture.title}}<mat-icon *ngIf="isEditing">close</mat-icon></button>
+          <ng-container *ngIf="isEditing">
+          </ng-container>
         </ng-container>
+        <h2 *ngIf="!professor.canTeach.length">No Lectures</h2>
+        <button *ngIf="isEditing" mat-mini-fab color="primary" [matMenuTriggerFor]="menu">
+          <mat-icon>plus_one</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button *ngFor="let lecture of this.lectures" (click)="addLecture(lecture)"
+            mat-menu-item>{{lecture.title}}</button>
+        </mat-menu>
       </div>
     </mat-card-content>
     <mat-card-content style="padding-block: 10px">
       <h2 style="margin-bottom: 20px">Available:</h2>
       <time-slot *ngFor="let slot of professor!.availableAt" [slot]="slot" (saved)="updateSlot()"
         (removed)="removeSlot($event)"></time-slot>
-      <button mat-flat-button color="primary">
+      <button mat-flat-button color="primary" (click)="addSlot()">
         Add Slot
       </button>
     </mat-card-content>
