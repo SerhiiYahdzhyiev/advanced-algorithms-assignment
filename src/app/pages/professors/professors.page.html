@@ -1,7 +1,7 @@
 <mat-spinner *ngIf="isFetching" />
 <ng-container *ngIf="!isFetching">
   <ng-container *ngIf="professors.length">
-    <professor *ngFor="let professor of professors" [professor]="professor" />
+    <professor *ngFor="let professor of professors" [professor]="professor" [lectures]="lectures" />
   </ng-container>
 
   <ng-container *ngIf="!professors.length">

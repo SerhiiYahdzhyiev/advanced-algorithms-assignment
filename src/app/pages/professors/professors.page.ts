@@ -5,7 +5,7 @@ import { Component, OnInit } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
-import { Professor } from "@interfaces";
+import { Lecture, Professor } from "@interfaces";
 import { CRUDService } from "@services";
 import { ProfessorComponent } from "@components";
 
@@ -23,12 +23,14 @@ import { ProfessorComponent } from "@components";
 })
 export class ProfessorsPage implements OnInit {
   professors: Professor[] = [];
+  lectures: Lecture[] = [];
   isFetching: boolean = false;
 
   constructor(private crudService: CRUDService) { }
 
   ngOnInit(): void {
     this.isFetching = true;
+    this.getLectures();
     this.getProfessors();
   }
 
@@ -39,6 +41,14 @@ export class ProfessorsPage implements OnInit {
     }, (error: HttpErrorResponse) => {
       console.error(error);
       this.isFetching = false;
+    });
+  }
+
+  getLectures() {
+    this.crudService.getAll<Lecture>("lectures").subscribe((lectures) => {
+      this.lectures = lectures;
+    }, (error: HttpErrorResponse) => {
+      console.error(error);
     });
   }
 }
