@@ -23,6 +23,7 @@ export interface Classroom {
 }
 
 export interface TimeSlot {
+  id: number;
   weekday: Weekday;
   from: number;
   to: number;

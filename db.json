@@ -8,6 +8,7 @@
       ],
       "availableAt": [
         {
+          "id": 1,
           "weekday": "Mo",
           "from": 800,
           "to": 1800

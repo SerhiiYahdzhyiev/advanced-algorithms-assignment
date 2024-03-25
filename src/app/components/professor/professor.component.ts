@@ -10,9 +10,10 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatMenuModule } from "@angular/material/menu";
 
-import { Lecture, Professor } from "@interfaces";
+import { Lecture, Professor, TimeSlot } from "@interfaces";
 
 import { CRUDService } from "@services";
+import { TimeSlotComponent } from "../time-slot/time-slot.component";
 
 @Component({
   standalone: true,
@@ -28,12 +29,13 @@ import { CRUDService } from "@services";
     MatInputModule,
     MatIconModule,
     MatMenuModule,
+    TimeSlotComponent,
   ],
   providers: [CRUDService],
 })
 export class ProfessorComponent implements OnInit {
   @Input()
-  professor: Professor | null = null;
+  professor: Professor = {} as Professor;
 
   @Input()
   lectures: Lecture[] = [];
@@ -52,20 +54,6 @@ export class ProfessorComponent implements OnInit {
   }
 
   constructor(private crudService: CRUDService) { }
-
-  formatSlotTime(time: number) {
-    let sliceIndex;
-    const timeString = time.toString();
-
-    if (timeString.length > 3) {
-      sliceIndex = 2;
-    } else {
-      sliceIndex = 1;
-    }
-
-    return timeString.substr(0, sliceIndex) + ":" +
-      timeString.substr(sliceIndex, 2);
-  }
 
   handleSaveClick() {
     this.save();
@@ -108,6 +96,17 @@ export class ProfessorComponent implements OnInit {
       );
       this.canTeach = this.canTeach.filter((l) => l.id !== lecture.id);
     }
+  }
+
+  updateSlot() {
+    this.save();
+  }
+
+  removeSlot(slotId: number) {
+    this.professor.availableAt = this.professor.availableAt.filter((slot) =>
+      slot.id !== slotId
+    );
+    this.save();
   }
 
   remove() {
