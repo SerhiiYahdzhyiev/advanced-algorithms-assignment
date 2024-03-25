@@ -44,6 +44,6 @@ export class CRUDService implements ICRUDService {
     return this.client.put<number>(`${this.baseUrl}/${key}`, options);
   }
   delete(key: string, id: number) {
-    return this.client.get<number>(`${this.baseUrl}/${key}/${id}`);
+    return this.client.delete<number>(`${this.baseUrl}/${key}/${id}`);
   }
 }
