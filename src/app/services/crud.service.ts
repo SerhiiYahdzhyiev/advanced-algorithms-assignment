@@ -7,7 +7,11 @@ export interface ICRUDService {
   getAll: <T>(key: string) => Observable<T[]>;
   getOne: <T>(key: string, id: number) => Observable<T>;
   create: <T>(key: string, payload: Partial<T>) => Observable<number>;
-  update: <T>(key: string, payload: Partial<T>) => Observable<number>;
+  update: <T>(
+    key: string,
+    id: number,
+    payload: Partial<T>,
+  ) => Observable<number>;
   delete: (key: string, id: number) => Observable<number>;
 }
 
@@ -36,14 +40,19 @@ export class CRUDService implements ICRUDService {
     };
     return this.client.post<number>(`${this.baseUrl}/${key}`, options);
   }
-  update<T>(key: string, payload: Partial<T>) {
+  update<T>(key: string, id: number, payload: Partial<T>) {
     const options = {
       ...this.httpOptions,
-      body: JSON.stringify(payload),
     };
-    return this.client.put<number>(`${this.baseUrl}/${key}`, options);
+    return this.client.put<number>(
+      `${this.baseUrl}/${key}/${id}`,
+      payload,
+      options,
+    );
   }
   delete(key: string, id: number) {
+    console.log("Sending request...");
+    console.log(key, id);
     return this.client.delete<number>(`${this.baseUrl}/${key}/${id}`);
   }
 }
