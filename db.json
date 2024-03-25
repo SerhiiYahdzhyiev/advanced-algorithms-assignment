@@ -1,52 +1,22 @@
 {
   "professors": [
     {
-      "id": "1",
       "fullName": "John Doe",
+      "canTeach": [
+        1,
+        2
+      ],
       "availableAt": [
         {
           "weekday": "Mo",
           "from": 800,
-          "to": 1900
+          "to": 1800
         }
       ],
-      "canTeach": [
-        1,
-        2
-      ]
-    },
-    {
-      "id": "2",
-      "fullName": "John Doe",
-      "availableAt": [
-        {
-          "weekday": "Mo",
-          "from": 800,
-          "to": 1900
-        }
-      ],
-      "canTeach": [
-        1,
-        2
-      ]
+      "id": "1"
     }
   ],
   "lectures": [
-    {
-      "id": "1",
-      "fullName": "John Doe",
-      "availableAt": [
-        {
-          "weekday": "Mo",
-          "from": 800,
-          "to": 1900
-        }
-      ],
-      "canTeach": [
-        1,
-        2
-      ]
-    },
     {
       "id": "1",
       "title": "Lecture 1"
