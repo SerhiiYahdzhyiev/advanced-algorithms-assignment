@@ -1,13 +1,63 @@
 <mat-card>
   <mat-card-content>
     <mat-card-header>
-      <mat-card-title>
+      <mat-card-title *ngIf="!isEditing">
         {{professor!.fullName}}
       </mat-card-title>
+      <mat-form-field *ngIf="isEditing" class="example-full-width">
+        <mat-label>Full Name</mat-label>
+        <input matInput placeholder="Professor's Full Name" [(ngModel)]="professor!.fullName" />
+      </mat-form-field>
     </mat-card-header>
+    <mat-card-content style="padding-block: 10px">
+      <h3>Can Teach:</h3>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button *ngFor="let lecture of canTeach" (click)="removeLecture(lecture)" mat-flat-button color="accent">
+          {{lecture.title}}<mat-icon *ngIf="isEditing">close</mat-icon></button>
+        <ng-container *ngIf="isEditing">
+          <button mat-mini-fab color="primary" [matMenuTriggerFor]="menu">
+            <mat-icon>plus_one</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button *ngFor="let lecture of this.lectures" (click)="addLecture(lecture)"
+              mat-menu-item>{{lecture.title}}</button>
+          </mat-menu>
+        </ng-container>
+      </div>
+    </mat-card-content>
+    <mat-card-content style="padding-block: 10px">
+      <h2 style="margin-bottom: 20px">Available:</h2>
+      <mat-card *ngFor="let slot of professor!.availableAt">
+        <mat-card-content>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="display:flex;align-items:center;justify-content:space-between;min-width:20ch;">
+              <h2>Mo</h2>
+              <h2>{{formatSlotTime(slot.from)}}</h2>
+              -
+              <h2>{{formatSlotTime(slot.to)}}</h2>
+            </span>
+            <mat-card-actions style="padding: 0;">
+              <button mat-icon-button style="color:lightgreen;">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button style="color:darkred">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-card-actions>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <button mat-flat-button color="primary">
+        Add Slot
+      </button>
+
+    </mat-card-content>
     <mat-card-actions>
-      <button mat-button color="primary" (click)="isEditing ? save() : startEditing()">
+      <button mat-button color="primary" (click)="isEditing ? handleSaveClick() : startEditing() ">
         {{isEditing ?"Save":"Edit"}}
+      </button>
+      <button *ngIf="isEditing" mat-button color="accent" (click)="handleCancel()">
+        Cancel
       </button>
       <button mat-button color="warn" (click)="remove()">Remove</button>
     </mat-card-actions>
