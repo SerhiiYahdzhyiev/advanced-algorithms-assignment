@@ -1,6 +1,17 @@
+export enum Weekday {
+  MONDAY = "Mo",
+  TUESDAY = "Tu",
+  WEDNESDAY = "We",
+  THURSDAY = "Th",
+  FRIDAY = "Fr",
+  SATURDAY = "Sa",
+  SUNDAT = "Su",
+}
 export interface Professor {
   id: number;
-  title: string;
+  fullName: string;
+  availableAt: TimeSlot[];
+  canTeach: number[]; // Lecture.id[]
 }
 export interface Lecture {
   id: number;
@@ -11,4 +22,8 @@ export interface Classroom {
   title: string;
 }
 
-export interface TimeSlot { }
+export interface TimeSlot {
+  weekday: Weekday;
+  from: number;
+  to: number;
+}
