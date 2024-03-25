@@ -1,1 +1,15 @@
-<p>{{ professor!.title }}</p>
+<mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>
+        {{professor!.fullName}}
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-actions>
+      <button mat-button color="primary" (click)="isEditing ? save() : startEditing()">
+        {{isEditing ?"Save":"Edit"}}
+      </button>
+      <button mat-button color="warn" (click)="remove()">Remove</button>
+    </mat-card-actions>
+  </mat-card-content>
+</mat-card>
