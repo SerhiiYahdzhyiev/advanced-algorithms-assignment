@@ -1,14 +1,26 @@
 <mat-card>
   <mat-card-content>
     <div style="display:flex;align-items:center;justify-content:space-between;">
-      <span style="display:flex;align-items:center;justify-content:space-between;min-width:20ch;">
-        <h2>Mo</h2>
+      <span style="display:flex;align-items:center;justify-content:space-between;min-width:20ch;gap:5px;">
         <ng-container *ngIf="!isEditing">
+          <h2>{{slot.weekday}}</h2>
           <h2>{{formatSlotTime(slot.from)}}</h2>
           -
           <h2>{{formatSlotTime(slot.to)}}</h2>
         </ng-container>
         <ng-container *ngIf="isEditing">
+          <mat-form-field>
+            <mat-label>Weekday</mat-label>
+            <mat-select [(ngModel)]="slot.weekday">
+              <mat-option value="Mo">Monday</mat-option>
+              <mat-option value="Tu">Tuesday</mat-option>
+              <mat-option value="We">Wednesday</mat-option>
+              <mat-option value="Th">Thursday</mat-option>
+              <mat-option value="Fr">Friday</mat-option>
+              <mat-option value="Sa">Saturday</mat-option>
+              <mat-option value="Su">Sunday</mat-option>
+            </mat-select>
+          </mat-form-field>
           <mat-form-field>
             <mat-label>From</mat-label>
             <input matInput type="time" min="09:00" max="19:00" [(ngModel)]="formattedFrom" />
@@ -20,7 +32,7 @@
           </mat-form-field>
         </ng-container>
       </span>
-      <mat-card-actions style="padding: 0;">
+      <mat-card-actions style="padding:0;">
         <button mat-icon-button style="color:lightgreen;" (click)="isEditing ? handleSave() : startEditing()">
           <mat-icon *ngIf="!isEditing">edit</mat-icon>
           <mat-icon *ngIf="isEditing">save</mat-icon>
