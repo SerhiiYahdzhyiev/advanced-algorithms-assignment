@@ -34,6 +34,20 @@ export class ProfessorsPage implements OnInit {
     this.getProfessors();
   }
 
+  addProfessor() {
+    const newProfessor: Partial<Professor> = {
+      fullName: "Professor Name",
+      canTeach: [],
+      availableAt: [],
+    };
+
+    this.crudService.create<Professor>("professors", newProfessor).subscribe(
+      (professor) => {
+        this.professors.push(professor);
+      },
+    );
+  }
+
   getProfessors() {
     this.crudService.getAll<Professor>("professors").subscribe((professors) => {
       this.professors = professors;
