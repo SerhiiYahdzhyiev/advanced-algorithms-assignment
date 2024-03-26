@@ -41,4 +41,17 @@ export class ClassroomsPage implements OnInit {
       this.isFetching = false;
     });
   }
+
+  addClassroom() {
+    const newClassroom = {
+      title: "New Classroom Title",
+      capacity: 14,
+    };
+
+    this.crudService.create<Classroom>("classrooms", {
+      ...newClassroom,
+    }).subscribe((
+      classroom,
+    ) => this.classrooms.push(classroom));
+  }
 }
