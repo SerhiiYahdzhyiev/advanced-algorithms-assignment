@@ -41,4 +41,16 @@ export class LecturesPage implements OnInit {
       this.isFetching = false;
     });
   }
+
+  addLecture() {
+    const newLecture = {
+      title: "New Lecture Title",
+      participantsCount: 42,
+      duration: 69,
+    };
+
+    this.crudService.create<Lecture>("lectures", newLecture).subscribe(
+      (lecture) => this.lectures.push(lecture)
+    );
+  }
 }
