@@ -1,1 +1,42 @@
-<p>{{ lecture!.title }}</p>
+<mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title *ngIf="!isEditing">
+        {{lecture.title}}
+      </mat-card-title>
+      <mat-form-field *ngIf="isEditing">
+        <mat-label>Lecture Title</mat-label>
+        <input matInput placeholder="Lecture Title" [(ngModel)]="lecture.title" />
+      </mat-form-field>
+    </mat-card-header>
+    <mat-card-content>
+      <div style="display:flex;align-items:end;gap:20px;">
+        <h3>Duration:</h3>
+        <h2 *ngIf="!isEditing">{{lecture.duration}}</h2>
+        <mat-form-field *ngIf="isEditing">
+          <mat-label>Lecture Duration</mat-label>
+          <input matInput type="number" min="1" placeholder="Lecture Duration" [(ngModel)]="lecture.duration" />
+        </mat-form-field>
+        <h3>minutes</h3>
+      </div>
+      <div style="display:flex;align-items:end;gap:20px;">
+        <h3>Participants:</h3>
+        <h2 *ngIf="!isEditing">{{lecture.participantsCount}}</h2>
+        <mat-form-field *ngIf="isEditing">
+          <mat-label>Lecture Participants</mat-label>
+          <input matInput type="number" min="1" placeholder="Lecture Participants"
+            [(ngModel)]="lecture.participantsCount" />
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button color="primary" (click)="isEditing ? save() : startEditing()">
+        {{isEditing ? "Save" : "Edit"}}
+      </button>
+      <button *ngIf="isEditing" mat-button color="accent" (click)="handleCancel()">
+        Cancel
+      </button>
+      <button mat-button color="warn" (click)="remove()">Remove</button>
+    </mat-card-actions>
+  </mat-card-content>
+</mat-card>
