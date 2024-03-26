@@ -16,10 +16,14 @@ export interface Professor {
 export interface Lecture {
   id: number;
   title: string;
+  participantsCount: number;
+  duration: number;
 }
+
 export interface Classroom {
   id: number;
   title: string;
+  capacity: number;
 }
 
 export interface TimeSlot {
