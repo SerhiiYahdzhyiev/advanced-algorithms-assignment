@@ -1,1 +1,32 @@
-<p>{{ classroom!.title }}</p>
+<mat-card>
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title *ngIf="!isEditing">
+        {{classroom.title}}
+      </mat-card-title>
+      <mat-form-field *ngIf="isEditing">
+        <mat-label>Classroom Title</mat-label>
+        <input matInput placeholder="Classrooom Title" [(ngModel)]="classroom.title" />
+      </mat-form-field>
+    </mat-card-header>
+    <mat-card-content>
+      <div style="display:flex;align-items:center;gap:20px;">
+        <h3>Capacity:</h3>
+        <h2 *ngIf="!isEditing">{{classroom.capacity}}</h2>
+        <mat-form-field *ngIf="isEditing">
+          <mat-label>Classroom Capacity</mat-label>
+          <input matInput type="number" min="1" placeholder="Classrooom Capacity" [(ngModel)]="classroom.capacity" />
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button color="primary" (click)="isEditing ? save() : startEditing()">
+        {{isEditing ? "Save" : "Edit"}}
+      </button>
+      <button *ngIf="isEditing" mat-button color="accent" (click)="handleCancel()">
+        Cancel
+      </button>
+      <button mat-button color="warn" (click)="remove()">Remove</button>
+    </mat-card-actions>
+  </mat-card-content>
+</mat-card>
