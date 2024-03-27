@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
 import { MatButtonModule } from "@angular/material/button";
@@ -48,7 +48,7 @@ export class ProfessorComponent implements OnInit {
   ngOnInit() {
     this.initialName = this.professor!.fullName;
     this.canTeach = this.lectures.filter((lecture) =>
-      this.professor.canTeach.includes(+lecture.id)
+      this.professor.canTeach.includes(lecture.id)
     );
     this.initialCanTeach = [...this.canTeach];
   }
@@ -62,7 +62,7 @@ export class ProfessorComponent implements OnInit {
 
   handleCancel() {
     this.professor.fullName = this.initialName;
-    this.professor.canTeach = [...this.initialCanTeach.map((l) => +l.id)];
+    this.professor.canTeach = [...this.initialCanTeach.map((l) => l.id)];
     this.canTeach = [...this.initialCanTeach];
     this.endEditing();
   }
@@ -85,16 +85,16 @@ export class ProfessorComponent implements OnInit {
   }
 
   addLecture(lecture: Lecture) {
-    if (!this.professor.canTeach.includes(+lecture.id)) {
-      this.professor.canTeach.push(+lecture.id);
+    if (!this.professor.canTeach.includes(lecture.id)) {
+      this.professor.canTeach.push(lecture.id);
       this.canTeach.push({ ...lecture });
     }
   }
 
   removeLecture(lecture: Lecture) {
-    if (this.professor.canTeach.includes(+lecture.id)) {
+    if (this.professor.canTeach.includes(lecture.id)) {
       this.professor.canTeach = this.professor.canTeach.filter((lectureId) =>
-        +lecture.id !== lectureId
+        lecture.id !== lectureId
       );
       this.canTeach = this.canTeach.filter((l) => l.id !== lecture.id);
     }

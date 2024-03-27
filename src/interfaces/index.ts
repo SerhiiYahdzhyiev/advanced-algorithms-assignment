@@ -8,20 +8,20 @@ export enum Weekday {
   SUNDAT = "Su",
 }
 export interface Professor {
-  id: number;
+  id: string;
   fullName: string;
   availableAt: TimeSlot[];
-  canTeach: number[]; // Lecture.id[]
+  canTeach: string[]; // Lecture.id[]
 }
 export interface Lecture {
-  id: number;
+  id: string;
   title: string;
   participantsCount: number;
   duration: number;
 }
 
 export interface Classroom {
-  id: number;
+  id: string;
   title: string;
   capacity: number;
 }

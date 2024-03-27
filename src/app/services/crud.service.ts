@@ -5,14 +5,14 @@ import { Injectable } from "@angular/core";
 
 export interface ICRUDService {
   getAll: <T>(key: string) => Observable<T[]>;
-  getOne: <T>(key: string, id: number) => Observable<T>;
+  getOne: <T>(key: string, id: string) => Observable<T>;
   create: <T>(key: string, payload: Partial<T>) => Observable<T>;
   update: <T>(
     key: string,
-    id: number,
+    id: string,
     payload: Partial<T>,
   ) => Observable<T>;
-  delete: <T>(key: string, id: number) => Observable<T>;
+  delete: <T>(key: string, id: string) => Observable<T>;
 }
 
 @Injectable()
@@ -30,7 +30,7 @@ export class CRUDService implements ICRUDService {
   getAll<T>(key: string) {
     return this.client.get<T[]>(`${this.baseUrl}/${key}`);
   }
-  getOne<T>(key: string, id: number) {
+  getOne<T>(key: string, id: string) {
     return this.client.get<T>(`${this.baseUrl}/${key}/${id}`);
   }
   create<T>(key: string, payload: Partial<T>) {
@@ -40,14 +40,14 @@ export class CRUDService implements ICRUDService {
       this.httpOptions,
     );
   }
-  update<T>(key: string, id: number, payload: Partial<T>) {
+  update<T>(key: string, id: string, payload: Partial<T>) {
     return this.client.put<T>(
       `${this.baseUrl}/${key}/${id}`,
       payload,
       this.httpOptions,
     );
   }
-  delete<T>(key: string, id: number) {
+  delete<T>(key: string, id: string) {
     console.log("Sending request...");
     console.log(key, id);
     return this.client.delete<T>(`${this.baseUrl}/${key}/${id}`);
