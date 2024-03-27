@@ -3,7 +3,7 @@ import { map, shareReplay } from "rxjs/operators";
 
 import { Component, inject } from "@angular/core";
 
-import { AsyncPipe, CommonModule } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 
 import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
 
@@ -14,10 +14,13 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from "@angular/material/icon";
+import { ScheduleService } from "./services/schedule.service";
+import { CRUDService } from "./services/crud.service";
 
 @Component({
   selector: "app-root",
   standalone: true,
+  templateUrl: "./app.component.html",
   imports: [
     MatToolbarModule,
     MatButtonModule,
@@ -29,7 +32,10 @@ import { MatIconModule } from "@angular/material/icon";
     RouterLink,
     RouterLinkActive,
   ],
-  templateUrl: "./app.component.html",
+  providers: [
+    CRUDService,
+    ScheduleService,
+  ],
 })
 export class AppComponent {
   private breakpointObserver = inject(BreakpointObserver);
@@ -41,4 +47,10 @@ export class AppComponent {
       map((result) => result.matches),
       shareReplay(),
     );
+
+  constructor(private scheduler: ScheduleService) { }
+
+  generateSchedule() {
+    this.scheduler.generateSchedule();
+  }
 }
