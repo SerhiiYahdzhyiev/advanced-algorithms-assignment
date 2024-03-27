@@ -13,7 +13,8 @@
       <h3>Can Teach:</h3>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
         <ng-container *ngIf="professor.canTeach.length">
-          <button *ngFor="let lecture of canTeach" (click)="removeLecture(lecture)" mat-flat-button color="accent">
+          <button *ngFor="let lecture of canTeach" (click)="removeLecture(lecture)" [disabled]="!isEditing"
+            mat-flat-button color="accent">
             {{lecture.title}}<mat-icon *ngIf="isEditing">close</mat-icon></button>
           <ng-container *ngIf="isEditing">
           </ng-container>
