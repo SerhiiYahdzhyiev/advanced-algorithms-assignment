@@ -12,14 +12,14 @@
     <mat-card-content style="padding-block: 10px">
       <h3>Can Teach:</h3>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-        <ng-container *ngIf="professor.canTeach.length">
+        <ng-container *ngIf="canTeach.length">
           <button *ngFor="let lecture of canTeach" (click)="removeLecture(lecture)" [disabled]="!isEditing"
             mat-flat-button color="accent">
             {{lecture.title}}<mat-icon *ngIf="isEditing">close</mat-icon></button>
           <ng-container *ngIf="isEditing">
           </ng-container>
         </ng-container>
-        <h2 *ngIf="!professor.canTeach.length">No Lectures</h2>
+        <h2 *ngIf="!canTeach.length">No Lectures</h2>
         <button *ngIf="isEditing" mat-mini-fab color="primary" [matMenuTriggerFor]="menu">
           <mat-icon>plus_one</mat-icon>
         </button>
