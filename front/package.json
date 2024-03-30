@@ -4,9 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:prod": "nohup npx json-server db/db.json && ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "server": "npx json-server db.json"
+    "server": "npx json-server db/db.json"
   },
   "private": true,
   "dependencies": {
