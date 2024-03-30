@@ -31,4 +31,12 @@ export interface TimeSlot {
   weekday: Weekday;
   from: number;
   to: number;
+  duration?: number; // In minutes
+}
+
+export interface ScheduleEntry {
+  lecture: Lecture;
+  professor: Professor;
+  classroom: Classroom;
+  timeSlot: TimeSlot;
 }
