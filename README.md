@@ -54,4 +54,4 @@ You can use this links for detailed installation instructions:
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE.md).
