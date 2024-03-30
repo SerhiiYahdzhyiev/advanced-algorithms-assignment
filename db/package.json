@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx json-server db/db.json"
+    "start": "npx json-server -h '0.0.0.0' db.json "
   },
   "keywords": [],
   "author": "",

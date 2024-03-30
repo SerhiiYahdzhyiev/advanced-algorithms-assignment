@@ -1,0 +1,14 @@
+name: schedule-app
+
+services:
+  front:
+    image: "shcedule-front:latest"
+    build: ./front
+    ports:
+     - 4200:4200
+
+  db:
+    image: "schedule-db:latest"
+    build: ./db
+    ports:
+      - 3000:3000

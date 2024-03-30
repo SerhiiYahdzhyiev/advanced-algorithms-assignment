@@ -1,16 +1,16 @@
-FROM node:alpine
+FROM node:lts-alpine
 
-RUN npm install -g @angular/cli
+RUN yarn global add @angular/cli
 
 WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app
 
-RUN npm install
+RUN yarn install
 
 COPY . /usr/src/app
 
-CMD ["npm", "run", "start:prod"]
+CMD ["yarn","start"]
 
 EXPOSE 4200
 
