@@ -9,7 +9,7 @@ The main goal of this assignment was to design an algorithm to schedule the
 lectures in the university. The SPA consists of three pages, each one represents
 a key entity: _Professor_, _Lecture_, and _Classroom_. There is also a
 `Generate Schedule` button in the main header, which triggers the algorythm. All
-entities have their attributes. More detailed reviview will be provided in the
+entities have their attributes. More detailed review will be provided in the
 submited report of this assignment.
 
 ## Getting Started
