@@ -9,18 +9,26 @@ import {
 } from "@interfaces";
 import { CRUDService } from "./crud.service";
 
+type ClassroomId = string;
+type ProfessorId = string;
+
 @Injectable()
 export class ScheduleService {
   professors: Professor[] = [];
   lectures: Lecture[] = [];
   classrooms: Classroom[] = [];
 
+  private assignedLecturesCount: number = 0;
+
   private lecturesIds: Set<string> = new Set();
   private canBeTeached: Set<string> = new Set();
+
   private classrooomsCapacities: number[] = [];
   private lecturesParticipantsCounts: number[] = [];
-  private lectureToProfessors: Map<string, Professor[]> = new Map();
 
+  private lectureToProfessors: Map<string, Professor[]> = new Map();
+  private professorToSlots: Map<ProfessorId, TimeSlot[]> = new Map();
+  private occupiedSlots: Map<ClassroomId, TimeSlot[]> = new Map();
   private schedule: Map<Weekday, ScheduleEntry[]> = new Map();
 
   constructor(private crudService: CRUDService) {
@@ -59,6 +67,13 @@ export class ScheduleService {
   }
 
   prepareData() {
+    // Reset
+    for (const weekday of Object.values(Weekday)) {
+      this.schedule.set(weekday, []);
+    }
+    this.assignedLecturesCount = 0;
+
+    // Populate sets
     this.lecturesIds = new Set([...this.lectures.map((l) => l.id)]);
     this.canBeTeached = new Set([...[
       ...this.professors.map((p) => p.canTeach),
@@ -68,20 +83,33 @@ export class ScheduleService {
       ...[...this.professors.map((p) => p.availableAt)].flat(),
     ];
 
+    // Add duration to timeSlots
     for (const slot of timeSlots) {
       (slot as any).duration = getLengthFrom(slot);
     }
 
+    // Populate arrays
     this.classrooomsCapacities = this.classrooms.map((c) => c.capacity);
     this.lecturesParticipantsCounts = this.lectures.map((l) =>
       l.participantsCount
     );
 
+    // Populate lecture to professors map
     for (const lecture of this.lectures) {
       const professors = this.professors.filter((p) =>
         p.canTeach.includes(lecture.id)
       );
       this.lectureToProfessors.set(lecture.id, professors);
+    }
+
+    //Initialize occupied slots map
+    for (const classroom of this.classrooms) {
+      this.occupiedSlots.set(classroom.id, []);
+    }
+
+    // Initialize professor to slots map
+    for (const professor of this.professors) {
+      this.professorToSlots.set(professor.id, professor.availableAt);
     }
   }
 
@@ -127,114 +155,119 @@ export class ScheduleService {
     return message;
   }
 
+  assign(
+    lecture: Lecture,
+    professor: Professor,
+    classroom: Classroom,
+    timeSlot: TimeSlot,
+  ) {
+    this.schedule.get(timeSlot.weekday)?.push({
+      lecture: {
+        ...lecture,
+      },
+      professor,
+      classroom,
+    });
+
+    this.assignedLecturesCount++;
+  }
+
   async generateSchedule() {
     await this.loadInputs();
 
     let error = this.validateInitalData();
-
     if (error) {
       alert(error);
       return;
     }
 
     this.prepareData();
-    error = this.checkCanGenerate();
 
+    error = this.checkCanGenerate();
     if (error) {
       alert(error);
       return;
     }
 
-    for (const lecture of this.lectures) {
-      const professors = this.lectureToProfessors.get(lecture.id);
-
-      if (!professors || professors.length === 0) {
-        console.log(`No professors available for lecture: ${lecture.title}`);
-        continue;
-      }
+    // The algorithm
+    for (let lecture of this.lectures) {
+      let assigned = false;
+      const professors = this.lectureToProfessors.get(lecture.id)!;
 
       for (const professor of professors) {
+        if (assigned) break;
         for (const timeSlot of professor.availableAt) {
-          const classroom = this.findAvailableClassroom(
-            timeSlot,
-            lecture,
-          );
+          if (timeSlot.duration! < lecture.duration) {
+            continue;
+          }
+
+          const lectureSlot = getLectureTimeSlot(timeSlot, lecture.duration);
+
+          const classroom = this.findAvailableClassroom(lectureSlot, lecture.participantsCount);
           if (!classroom) {
             console.log(
-              `No available classrooms for lecture: ${lecture.title}`,
+              `No available classrooms for lecture: ${lecture.title} and timeSlot: ${JSON.stringify(timeSlot)}`
             );
             continue;
           }
 
-          this.schedule.get(timeSlot.weekday)?.push({
-            lecture,
-            professor,
-            classroom,
-            timeSlot,
-          });
+          lecture = {
+            ...lecture,
+            start: lectureSlot.from,
+            end: lectureSlot.to
+          };
+
+          if (getTotalMinutesFrom(timeSlot.from) + lecture.duration === getTotalMinutesFrom(timeSlot.to)) {
+            professor.availableAt = professor.availableAt.filter(slot => slot.id !== timeSlot.id);
+          } else {
+            timeSlot.from = getTimeFrom(
+              getTotalMinutesFrom(timeSlot.from) + lecture.duration
+            );
+            timeSlot.duration = getLengthFrom(timeSlot);
+          }
+
+          this.assign(lecture, professor, classroom, timeSlot);
 
           // If the lecture is assigned, break the loop
+          assigned = true;
           break;
         }
       }
     }
+    if (this.assignedLecturesCount !== this.lectures.length)
+      alert("Failed to compose weekly schedule for this input data!");
 
-    console.log(this.schedule);
+    return [...this.schedule.entries()];
   }
 
   findAvailableClassroom(
     timeSlot: TimeSlot,
-    lecture: Lecture,
-  ): Classroom | undefined {
+    capacity: number,
+  ): Classroom | null {
     // Find a classroom that is available during the given time slot and has enough capacity
     return this.classrooms.find((classroom) =>
-      classroom.capacity >= lecture.participantsCount &&
-      !this.isClassroomOccupied(classroom, timeSlot, lecture.duration)
-    );
+      classroom.capacity >= capacity &&
+      !this.isClassroomOccupied(classroom, timeSlot)
+    ) || null;
   }
 
   isClassroomOccupied(
     classroom: Classroom,
     timeSlot: TimeSlot,
-    duration: number,
   ): boolean {
     // Check if the classroom is occupied during the given time slot
-    const occupiedScheduleEntries = this.getOccupiedScheduleEntries(timeSlot);
-    const endMinutes = getTotalMinutesFrom(timeSlot.from) + timeSlot.duration!;
+    const occupiedSlots = this.occupiedSlots.get(classroom.id)!;
+    if (!occupiedSlots.length) return false;
 
-    for (const entry of occupiedScheduleEntries) {
-      if (entry.classroom.id === classroom.id) {
-        const entryEndMinutes = getTotalMinutesFrom(entry.timeSlot.from) +
-          entry.timeSlot.duration!;
-        if (
-          (entryEndMinutes > getTotalMinutesFrom(timeSlot.from) &&
-            entryEndMinutes <= endMinutes) ||
-          (getTotalMinutesFrom(entry.timeSlot.from) >=
-              getTotalMinutesFrom(timeSlot.from) &&
-            getTotalMinutesFrom(entry.timeSlot.from) < endMinutes)
-        ) {
-          return true;
-        }
-      }
-    }
-
-    return false;
+    return occupiedSlots.every(slot => !slotsOverlap(slot, timeSlot));
   }
+}
 
-  getOccupiedScheduleEntries(timeSlot: TimeSlot): ScheduleEntry[] {
-    // Get all schedule entries that are occupied during the given time slot
-    return this.schedule.get(timeSlot.weekday)?.filter((entry) => {
-      const entryEndMinutes = getTotalMinutesFrom(entry.timeSlot.from) +
-        entry.timeSlot.duration!;
-      const slotEndMinutes = getTotalMinutesFrom(timeSlot.from) +
-        timeSlot.duration!;
-      return (entryEndMinutes > getTotalMinutesFrom(timeSlot.from) &&
-        entryEndMinutes <= slotEndMinutes) ||
-        (getTotalMinutesFrom(entry.timeSlot.from) >=
-            getTotalMinutesFrom(timeSlot.from) &&
-          getTotalMinutesFrom(entry.timeSlot.from) < slotEndMinutes);
-    }) || [];
-  }
+function getTimeFrom(totalMinutes: number) {
+  const hours = Math.trunc(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  return hours * 100 + minutes;
 }
 
 function getLengthFrom(timeSlot: TimeSlot): number {
@@ -246,4 +279,25 @@ function getTotalMinutesFrom(time: number) {
   const minutes = time % 100;
 
   return hours * 60 + minutes;
+}
+
+function slotsOverlap(a: TimeSlot, b: TimeSlot) {
+  const startA = getTotalMinutesFrom(a.from);
+  const startB = getTotalMinutesFrom(b.from);
+  const endA = getTotalMinutesFrom(a.to);
+  const endB = getTotalMinutesFrom(b.to);
+
+  return !(startA >= endB || endA <= startB)
+}
+
+function getLectureTimeSlot(slot: TimeSlot, duration: number): TimeSlot {
+  const start = getTotalMinutesFrom(slot.from);
+
+  return {
+      id: Math.random() * 100,
+      weekday: slot.weekday,
+      from: getTimeFrom(start),
+      to: getTimeFrom(start + duration),
+      duration,
+  };
 }

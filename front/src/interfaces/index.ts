@@ -18,6 +18,8 @@ export interface Lecture {
   title: string;
   participantsCount: number;
   duration: number;
+  start?: number;
+  end?: number;
 }
 
 export interface Classroom {
@@ -38,5 +40,4 @@ export interface ScheduleEntry {
   lecture: Lecture;
   professor: Professor;
   classroom: Classroom;
-  timeSlot: TimeSlot;
 }

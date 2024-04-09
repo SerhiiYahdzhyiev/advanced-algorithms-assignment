@@ -10,3 +10,35 @@ app-root {
 .mat-drawer-container {
   height: 100%;
 }
+
+.schedule {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background: rgba(0,0,0,0.5);
+  z-index: 1;
+
+  overflow: auto;
+}
+
+.schedule button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+}
+
+.content {
+  width: 400px;
+  margin-inline: auto;
+  margin-block: 30px ;
+
+  background-color: gray;;
+  color: white;
+
+  padding: 30px;
+  white-space: pre;
+}
+

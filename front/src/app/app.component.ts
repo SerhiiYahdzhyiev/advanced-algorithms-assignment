@@ -3,7 +3,7 @@ import { map, shareReplay } from "rxjs/operators";
 
 import { Component, inject } from "@angular/core";
 
-import { AsyncPipe } from "@angular/common";
+import { AsyncPipe, CommonModule } from "@angular/common";
 
 import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
 
@@ -22,6 +22,7 @@ import { CRUDService } from "./services/crud.service";
   standalone: true,
   templateUrl: "./app.component.html",
   imports: [
+    CommonModule,
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
@@ -40,6 +41,9 @@ import { CRUDService } from "./services/crud.service";
 export class AppComponent {
   private breakpointObserver = inject(BreakpointObserver);
 
+  schedule: any = null;
+  isShowing = false;
+
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(
     Breakpoints.Handset,
   )
@@ -48,9 +52,21 @@ export class AppComponent {
       shareReplay(),
     );
 
-  constructor(private scheduler: ScheduleService) { }
+  setShowing(value:boolean) {
+    this.isShowing = value;
+  }
+
+  constructor(
+    private scheduler: ScheduleService,
+  ) {}
+
 
   generateSchedule() {
-    this.scheduler.generateSchedule();
+    this.scheduler.generateSchedule().then(
+      (s) =>{
+        this.schedule = JSON.stringify(s,undefined,4);
+        this.isShowing = true;
+      }
+    );
   }
 }
