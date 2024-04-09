@@ -3,19 +3,20 @@
     {
       "fullName": "John Doe",
       "canTeach": [
-        "f25b"
+        "f25b",
+        "717a"
       ],
       "availableAt": [
         {
           "id": 1,
           "weekday": "Mo",
           "from": 800,
-          "to": 1200
+          "to": 1000
         },
         {
           "id": 2,
           "weekday": "Tu",
-          "from": 900,
+          "from": 1300,
           "to": 1900
         }
       ],
@@ -23,30 +24,66 @@
     },
     {
       "fullName": "Jane Doe",
-      "canTeach": [],
+      "canTeach": [
+        "f25b",
+        "717a"
+      ],
       "availableAt": [
         {
           "id": 1,
           "weekday": "Th",
           "from": 900,
-          "to": 1900
+          "to": 1330
         },
         {
           "id": 2,
           "weekday": "Fr",
-          "from": 900,
-          "to": 1900
+          "from": 830,
+          "to": 1200
         }
       ],
       "id": "e04b"
+    },
+    {
+      "fullName": "Albert Einstein",
+      "canTeach": [
+        "37c9"
+      ],
+      "availableAt": [
+        {
+          "id": 1,
+          "weekday": "We",
+          "from": 1020,
+          "to": 1340
+        },
+        {
+          "id": 2,
+          "weekday": "Sa",
+          "from": 1100,
+          "to": 1400
+        }
+      ],
+      "id": "ea5c"
     }
   ],
   "lectures": [
     {
       "id": "f25b",
-      "title": "History",
+      "title": "History Group A",
       "participantsCount": 40,
-      "duration": 69
+      "duration": 90
+    },
+    {
+      "id": "717a",
+      "title": "History Group B",
+      "participantsCount": 30,
+      "duration": 90
+    },
+    {
+      "id": "37c9",
+      "title": "Math Group A",
+      "participantsCount": 25,
+      "duration": 120
     }
   ],
   "classrooms": [
@@ -59,6 +96,11 @@
       "id": "97cc",
       "title": "Classroom 2",
       "capacity": 15
+    },
+    {
+      "id": "053a",
+      "title": "Classroom 3",
+      "capacity": 30
     }
   ]
 }
