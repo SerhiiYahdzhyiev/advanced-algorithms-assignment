@@ -2,7 +2,7 @@ name: schedule-app
 
 services:
   front:
-    image: "shcedule-front:latest"
+    image: "schedule-front:latest"
     restart: unless-stopped
     build: ./front
     ports:
