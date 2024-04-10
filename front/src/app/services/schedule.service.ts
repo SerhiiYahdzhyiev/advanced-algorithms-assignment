@@ -159,12 +159,10 @@ export class ScheduleService {
     lecture: Lecture,
     professor: Professor,
     classroom: Classroom,
-    timeSlot: TimeSlot,
+    weekday: Weekday,
   ) {
-    this.schedule.get(timeSlot.weekday)?.push({
-      lecture: {
-        ...lecture,
-      },
+    this.schedule.get(weekday)!.push({
+      lecture,
       professor,
       classroom,
     });
@@ -218,6 +216,7 @@ export class ScheduleService {
             end: lectureSlot.to
           };
 
+          // Update professors availability
           if (getTotalMinutesFrom(timeSlot.from) + lecture.duration === getTotalMinutesFrom(timeSlot.to)) {
             professor.availableAt = professor.availableAt.filter(slot => slot.id !== timeSlot.id);
           } else {
@@ -227,7 +226,7 @@ export class ScheduleService {
             timeSlot.duration = getLengthFrom(timeSlot);
           }
 
-          this.assign(lecture, professor, classroom, timeSlot);
+          this.assign(lecture, professor, classroom, timeSlot.weekday);
 
           // If the lecture is assigned, break the loop
           assigned = true;
