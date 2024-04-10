@@ -197,6 +197,7 @@ export class ScheduleService {
       for (const professor of professors) {
         if (assigned) break;
         for (const timeSlot of professor.availableAt) {
+          if (assigned) break;
           if (timeSlot.duration! < lecture.duration) {
             continue;
           }
